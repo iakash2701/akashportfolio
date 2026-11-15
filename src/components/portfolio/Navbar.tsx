@@ -93,9 +93,13 @@ export function Navbar() {
             })}
             <Link
               to="/resume"
-              className="mt-2 rounded-xl px-4 py-3 text-left text-sm font-semibold text-primary bg-primary/15 border border-primary/30 transition-colors hover:bg-primary/25"
+              className={`rounded-xl px-4 py-3 text-left text-sm font-medium transition-colors ${
+                pathname === "/resume"
+                  ? "bg-primary text-primary-foreground font-semibold shadow-md shadow-primary/20"
+                  : "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+              }`}
             >
-              Resume Page
+              Resume
             </Link>
           </div>
         </motion.div>
