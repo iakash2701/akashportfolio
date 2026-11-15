@@ -4,39 +4,31 @@ import { Download, FolderOpen, Mail, Github, Linkedin, Instagram, MessageCircle 
 import { Link } from "@tanstack/react-router";
 import profile from "@/assets/profile.jpg";
 
-const roles = ["AI & ML Engineer", "Python Developer", "Data Analyst", "Full Stack Learner"];
 const EMAIL = "akashmuthu27012007@gmail.com";
 const WHATSAPP = "919751413133";
 const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}`;
 const whatsappUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP}&text=${encodeURIComponent("Hi Akash, I visited your portfolio.")}`;
 
-function Typewriter() {
-  const [i, setI] = useState(0);
-  const [text, setText] = useState("");
-  const [del, setDel] = useState(false);
+function HelloTyping() {
+  const target = "HELLO";
+  const [displayed, setDisplayed] = useState("");
 
   useEffect(() => {
-    const current = roles[i];
-    const speed = del ? 50 : 90;
-    const t = setTimeout(() => {
-      if (!del && text === current) {
-        setTimeout(() => setDel(true), 2000);
-        return;
+    let index = 0;
+    const interval = setInterval(() => {
+      index++;
+      setDisplayed(target.slice(0, index));
+      if (index >= target.length) {
+        clearInterval(interval);
       }
-      if (del && text === "") {
-        setDel(false);
-        setI((i + 1) % roles.length);
-        return;
-      }
-      setText(del ? current.slice(0, text.length - 1) : current.slice(0, text.length + 1));
-    }, speed);
-    return () => clearTimeout(t);
-  }, [text, del, i]);
+    }, 120);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <span className="gradient-text break-words">
-      {text}
-      <span className="animate-blink ml-1 inline-block w-[2px] h-[1em] bg-primary align-middle" />
+    <span className="inline-block gradient-text font-bold tracking-normal">
+      {displayed}
     </span>
   );
 }
@@ -90,7 +82,7 @@ export function Hero() {
             Hi, I'm <span className="gradient-text">Akash.</span>
           </h1>
           <div className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-display font-medium text-foreground/90 leading-snug">
-            AI & Machine Learning undergraduate building practical computer vision, analytics, predictive-maintenance and web applications.
+            <HelloTyping /> & Machine Learning undergraduate building practical computer vision, analytics, predictive-maintenance and web applications.
           </div>
 
           <div className="grid grid-cols-1 xs:grid-cols-2 sm:flex sm:flex-wrap justify-center gap-2.5 sm:gap-3 pt-2 lg:justify-start">
