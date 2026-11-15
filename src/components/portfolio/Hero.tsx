@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Download, FolderOpen, Mail, Github, Linkedin, Instagram, MessageCircle } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import profile from "@/assets/profile.jpg";
@@ -9,26 +9,60 @@ const WHATSAPP = "919751413133";
 const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}`;
 const whatsappUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP}&text=${encodeURIComponent("Hi Akash, I visited your portfolio.")}`;
 
-function HelloTyping() {
-  const target = "HELLO";
-  const [displayed, setDisplayed] = useState("");
+function HelloAnimation() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [ended, setEnded] = useState(false);
 
   useEffect(() => {
-    let index = 0;
-    const interval = setInterval(() => {
-      index++;
-      setDisplayed(target.slice(0, index));
-      if (index >= target.length) {
-        clearInterval(interval);
-      }
-    }, 120);
+    const video = videoRef.current;
+    if (!video) return;
 
-    return () => clearInterval(interval);
+    const handleEnded = () => {
+      setEnded(true);
+    };
+
+    video.addEventListener("ended", handleEnded);
+    video.play().catch(() => {
+      // If autoplay is blocked, show final text state
+      setEnded(true);
+    });
+
+    return () => {
+      video.removeEventListener("ended", handleEnded);
+    };
   }, []);
 
   return (
-    <span className="inline-block gradient-text font-bold tracking-normal">
-      {displayed}
+    <span className="relative inline-flex items-center align-middle mx-1 -my-1">
+      {/* Fallback & accessible text for screen readers and SEO */}
+      <span className="sr-only">HELLO</span>
+
+      {/* When video completes, display the crisp vector-quality final text with aurora gradient */}
+      <span
+        aria-hidden="true"
+        className={`font-bold gradient-text tracking-normal transition-opacity duration-300 ${
+          ended ? "opacity-100" : "opacity-0 absolute inset-0 pointer-events-none"
+        }`}
+      >
+        HELLO
+      </span>
+
+      {/* High performance hardware-accelerated draw-on animation from reference video */}
+      {!ended && (
+        <video
+          ref={videoRef}
+          muted
+          playsInline
+          autoPlay
+          preload="auto"
+          aria-hidden="true"
+          className="inline-block h-[1.15em] w-auto max-w-[120px] sm:max-w-[160px] object-contain select-none pointer-events-none"
+          style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.1)" }}
+        >
+          <source src="/hello_anim.webm" type="video/webm" />
+          <source src="/hello_anim.mp4" type="video/mp4" />
+        </video>
+      )}
     </span>
   );
 }
@@ -82,7 +116,7 @@ export function Hero() {
             Hi, I'm <span className="gradient-text">Akash.</span>
           </h1>
           <div className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-display font-medium text-foreground/90 leading-snug">
-            <HelloTyping /> & Machine Learning undergraduate building practical computer vision, analytics, predictive-maintenance and web applications.
+            <HelloAnimation /> & Machine Learning undergraduate building practical computer vision, analytics, predictive-maintenance and web applications.
           </div>
 
           <div className="grid grid-cols-1 xs:grid-cols-2 sm:flex sm:flex-wrap justify-center gap-2.5 sm:gap-3 pt-2 lg:justify-start">
