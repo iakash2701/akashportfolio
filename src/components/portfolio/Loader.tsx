@@ -33,9 +33,23 @@ export function Loader() {
         <motion.div
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background px-4 pointer-events-none"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-background px-4 pointer-events-none"
         >
-          <div className="relative flex flex-col items-center justify-center w-full max-w-2xl">
+          {/* Subtle dark grid and mesh background matching portfolio theme */}
+          <div className="absolute inset-0 grid-bg opacity-50" />
+          <div className="absolute inset-0 mesh-bg opacity-70" />
+
+          {/* Ambient aurora floating glow orbs */}
+          <div
+            className="pointer-events-none absolute h-72 w-72 sm:h-96 sm:w-96 rounded-full blur-3xl opacity-30"
+            style={{ background: "oklch(0.85 0.17 200 / 0.35)", top: "25%", left: "20%" }}
+          />
+          <div
+            className="pointer-events-none absolute h-72 w-72 sm:h-96 sm:w-96 rounded-full blur-3xl opacity-30"
+            style={{ background: "oklch(0.65 0.26 295 / 0.35)", bottom: "25%", right: "20%" }}
+          />
+
+          <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-2xl">
             {/* The handwritten HELLO draw-on animation from reference video */}
             <div className="relative w-full flex items-center justify-center">
               <video
