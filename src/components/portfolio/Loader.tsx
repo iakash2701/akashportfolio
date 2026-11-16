@@ -6,29 +6,25 @@ export function Loader() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleEnded = () => {
-      // Small pause after drawing completes before fading out loader
-      setTimeout(() => setDone(true), 600);
-    };
-
-    video.addEventListener("ended", handleEnded);
-    video.play().catch(() => {
-      // Fallback if autoplay is blocked
-      setTimeout(() => setDone(true), 2500);
-    });
-
-    // Safety timeout in case video stalls
-    const fallbackTimer = setTimeout(() => {
+    // Dismiss loader after animation completes (video is 3.58s)
+    const timer = setTimeout(() => {
       setDone(true);
-    }, 4500);
+    }, 3800);
 
-    return () => {
-      video.removeEventListener("ended", handleEnded);
-      clearTimeout(fallbackTimer);
-    };
+    const video = videoRef.current;
+    if (video) {
+      const handleEnded = () => {
+        setTimeout(() => setDone(true), 400);
+      };
+      video.addEventListener("ended", handleEnded);
+      video.play().catch(() => {});
+      return () => {
+        video.removeEventListener("ended", handleEnded);
+        clearTimeout(timer);
+      };
+    }
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -36,8 +32,8 @@ export function Loader() {
       {!done && (
         <motion.div
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.7, ease: "easeInOut" }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background px-4"
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background px-4 pointer-events-none"
         >
           <div className="relative flex flex-col items-center justify-center w-full max-w-2xl">
             {/* The handwritten HELLO draw-on animation from reference video */}
