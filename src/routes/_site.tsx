@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { Toaster } from "sonner";
+import { Loader } from "@/components/portfolio/Loader";
 import { ParticleField } from "@/components/portfolio/ParticleField";
 import { CursorGlow } from "@/components/portfolio/CursorGlow";
 import { ScrollProgress } from "@/components/portfolio/ScrollProgress";
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/_site")({
 function SiteLayout() {
   return (
     <div className="relative min-h-screen overflow-x-clip w-full">
+      <Loader />
       <ParticleField />
       <CursorGlow />
       <ScrollProgress />
